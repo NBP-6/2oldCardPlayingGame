@@ -180,7 +180,21 @@ body{background:var(--bg);color:var(--text);font-family:'Crimson Text',serif;min
 .spotlight-card .card-img{height:155px;}
 .spotlight-card .card-img-wrap{height:155px;}
 
-/* SPOTLIGHT */
+/* RULES MODAL */
+#rules-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+#rules-modal.open{display:flex;}
+.rules-box{background:#0e1218;border:1px solid rgba(180,150,90,0.3);border-radius:6px;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;padding:32px 36px;position:relative;}
+.rules-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--gold3);font-size:20px;cursor:pointer;line-height:1;}
+.rules-close:hover{color:var(--gold);}
+.rules-title{font-family:'Cinzel',serif;font-size:22px;color:var(--gold2);margin-bottom:4px;}
+.rules-sub{font-family:'Crimson Text',serif;font-style:italic;font-size:14px;color:var(--text3);margin-bottom:24px;}
+.rules-section{margin-bottom:20px;}
+.rules-section-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(180,150,90,0.15);}
+.rules-section p{font-family:'Crimson Text',serif;font-size:15px;color:var(--text);line-height:1.7;margin-bottom:6px;}
+.rules-section ul{padding-left:16px;}
+.rules-section ul li{font-family:'Crimson Text',serif;font-size:15px;color:var(--text);line-height:1.7;margin-bottom:3px;}
+.rules-section ul li strong{color:var(--gold2);font-weight:600;}
+.rules-note{font-family:'Crimson Text',serif;font-style:italic;font-size:13px;color:var(--text3);margin-top:24px;text-align:center;border-top:1px solid rgba(180,150,90,0.1);padding-top:16px;}
 #card-spotlight{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:1000;pointer-events:none;opacity:0;transition:opacity 0.2s;}
 #card-spotlight.visible{opacity:1;}
 .spotlight-inner{text-align:center;}
@@ -232,6 +246,68 @@ body{background:var(--bg);color:var(--text);font-family:'Crimson Text',serif;min
   <div class="intro-tagline">Raise the anchor. The duel begins.</div>
   <button class="btn" onclick="startGame()">Set Sail</button>
   <div style="font-size:12px;color:var(--text3);font-style:italic;margin-top:14px;">Reach streak 10 · Lose and start over</div>
+  <button class="btn-ghost" onclick="openRules()" style="margin-top:20px;letter-spacing:3px;">☠ Rules</button>
+</div>
+
+<!-- RULES MODAL -->
+<div id="rules-modal">
+  <div class="rules-box">
+    <button class="rules-close" onclick="closeRules()">✕</button>
+    <div class="rules-title">HOURGLASS</div>
+    <div class="rules-sub">How to Play — a fan project inspired by Sea of Thieves</div>
+
+    <div class="rules-section">
+      <div class="rules-section-title">The Goal</div>
+      <p>Sink the enemy ship before yours goes under. Your ship starts at <strong>15 HP</strong>. Reach 0 and you lose the battle.</p>
+    </div>
+
+    <div class="rules-section">
+      <div class="rules-section-title">Your Two Fighters</div>
+      <ul>
+        <li><strong>Your Ship</strong> — the main target. Protect it at all costs.</li>
+        <li><strong>Your Pirate</strong> — attacks, heals, and causes chaos. If they die, they're sent to the Ferry of the Damned and you skip your next turn before they respawn.</li>
+      </ul>
+    </div>
+
+    <div class="rules-section">
+      <div class="rules-section-title">How a Turn Works</div>
+      <p>Each turn you get <strong>3 mana</strong> — spend it or lose it, it doesn't carry over. You draw up to a <strong>hand of 5 cards</strong> at the start of each turn. Play as many cards as your mana allows, then end your turn. When your deck runs out, your discard pile reshuffles and you draw again.</p>
+    </div>
+
+    <div class="rules-section">
+      <div class="rules-section-title">Card Types</div>
+      <ul>
+        <li><strong>🔵 Naval</strong> — damage the enemy ship directly</li>
+        <li><strong>🔴 Pirate</strong> — attack the enemy pirate</li>
+        <li><strong>🟢 Repair</strong> — restore HP to your ship</li>
+        <li><strong>🟩 Healing</strong> — restore HP to your pirate</li>
+        <li><strong>🟡 Chaos</strong> — disrupt, draw, buff, or gamble</li>
+      </ul>
+      <p style="margin-top:8px;">Cards marked <strong>Consumed</strong> vanish after use instead of going to discard. Powerful, but you only get them once per deck cycle.</p>
+    </div>
+
+    <div class="rules-section">
+      <div class="rules-section-title">The Streak</div>
+      <p>Win a battle and your streak grows. Lose and it resets to zero. The goal is to reach <strong>streak 10</strong>. That's when you become a Pirate Legend.</p>
+    </div>
+
+    <div class="rules-section">
+      <div class="rules-section-title">Battle Modifiers</div>
+      <p>Each battle after the first introduces a new rule — storms that damage both ships, a megalodon that strikes randomly, TNT kegs appearing in your hand, the Kraken blocking your cannons. The further you go, the more chaotic it gets. The rule stays visible during the fight so you never forget it.</p>
+    </div>
+
+    <div class="rules-section">
+      <div class="rules-section-title">Rewards</div>
+      <p>Win a battle and choose one reward — either a new card added to your deck, or a permanent run bonus. Rewards come in three tiers: <strong>Common</strong>, <strong>Rare</strong> (from battle 4), and <strong>Legendary</strong> (from battle 7). You can only pick one Legendary per run.</p>
+    </div>
+
+    <div class="rules-section">
+      <div class="rules-section-title">The Final Tide — Battle 10</div>
+      <p>The Red Sea closes in. Every few turns, zone damage hits both ships and escalates. If the battle isn't finished when the zone fully closes, the ship with the least HP is sunk. No stalling. Finish it.</p>
+    </div>
+
+    <div class="rules-note">Made with love by 2old4stream · Not affiliated with Rare</div>
+  </div>
 </div>
 
 <!-- MODIFIER INTRO -->
@@ -966,10 +1042,13 @@ function turnStart(who){
 
 // ===================== AI =====================
 function runEnemy(){
+  // turnStart first so deadTurns increments and respawn logic runs
   turnStart('e');
   G.E.st.drunk=0;
   G.eAttackedLast=false;G.ePirateLast=false;
-  if(G.E.anchorballed){G.E.anchorballed=false;log('ai','⚓ Enemy skips turn.');endEnemy();return;}
+  // Skip checks AFTER turnStart — if pirate just respawned this tick, still skip this turn
+  if(G.E.anchorballed){G.E.anchorballed=false;log('ai','⚓ Enemy skips turn (Anchorball).');endEnemy();return;}
+  if(G.E.dead||G.E.justRespawned){if(G.E.dead)log('ai','☠ Enemy pirate on the Ferry — skipping turn.');else log('ai','☠ Enemy pirate just respawned — skips this turn.');endEnemy();return;}
   const cap=G.E.chained?1:999;G.E.chained=false;
   const hs=handSize();
   draw('e',Math.max(0,hs-G.eHand.length));
@@ -1113,6 +1192,12 @@ function skipReward(){
   G.mod=BATTLES[G.battle].mod;
   showModifier(G.battle);
 }
+
+// ===================== RULES MODAL =====================
+function openRules(){document.getElementById('rules-modal').classList.add('open');}
+function closeRules(){document.getElementById('rules-modal').classList.remove('open');}
+// Close on click outside the box
+document.getElementById('rules-modal').addEventListener('click',function(e){if(e.target===this)closeRules();});
 
 // ===================== BACKGROUND IMAGE =====================
 function applyBg(){
