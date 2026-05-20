@@ -56,10 +56,9 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 .has-bg{} /* kept for compatibility */
 
 /* MUSIC CONTROL */
-#music-ctrl{position:fixed;bottom:14px;right:14px;z-index:9999;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:20px;padding:6px 12px;}
-#music-btn{background:none;border:none;color:var(--gold);font-size:16px;cursor:pointer;padding:0;line-height:1;}
-#music-vol{-webkit-appearance:none;appearance:none;width:70px;height:3px;background:rgba(180,150,90,0.3);border-radius:2px;outline:none;cursor:pointer;}
-#music-vol::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--gold);cursor:pointer;}
+/* music controls now inline in top bar */
+#music-vol{-webkit-appearance:none;appearance:none;width:60px;height:3px;background:rgba(180,150,90,0.3);border-radius:2px;outline:none;cursor:pointer;vertical-align:middle;}
+#music-vol::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--gold);cursor:pointer;}
 
 /* INTRO */
 #screen-intro{align-items:center;justify-content:center;text-align:center;}
@@ -72,6 +71,11 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 .intro-tagline{font-family:var(--font-body);font-style:italic;font-size:20px;color:var(--text2);margin-bottom:32px;}
 .btn{font-family:var(--font-title);font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#0a0c0f;background:linear-gradient(160deg,#c8963c,#a07030);border:none;border-radius:2px;padding:14px 36px;cursor:pointer;transition:opacity 0.2s,transform 0.2s;}
 .btn:hover{opacity:0.85;transform:translateY(-1px);}
+.pulse-btn{animation:btn-pulse 2s ease-in-out infinite;}
+@keyframes btn-pulse{
+  0%,100%{box-shadow:0 0 8px rgba(200,150,60,0.3);}
+  50%{box-shadow:0 0 24px rgba(200,150,60,0.8),0 0 48px rgba(200,150,60,0.3);}
+}
 .btn-ghost{background:transparent;color:var(--gold);border:1px solid rgba(180,150,90,0.4);border-radius:2px;font-family:var(--font-title);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;cursor:pointer;transition:all 0.2s;margin-top:12px;}
 .btn-ghost:hover{background:rgba(180,150,90,0.1);}
 
@@ -84,15 +88,24 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 
 /* GAME LAYOUT */
 #screen-game{flex-direction:column;height:100vh;overflow:hidden;}
-.game-layout{display:grid;grid-template-columns:190px 1fr 180px;grid-template-rows:auto auto 1fr auto auto;height:100vh;overflow:hidden;}
+.game-layout{display:grid;grid-template-columns:190px 1fr 180px;grid-template-rows:auto auto 1fr auto 260px;height:100vh;overflow:hidden;}
 
 /* TOP BAR */
 .top-bar{grid-column:1/4;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.35);}
-.streak-display{display:flex;align-items:center;gap:5px;}
-.streak-pip{width:22px;height:22px;border-radius:50%;border:1px solid rgba(180,150,90,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-title);font-size:8px;color:var(--gold3);transition:all 0.3s;}
-.streak-pip.done{background:rgba(60,130,80,0.3);border-color:rgba(80,160,100,0.5);color:#80c890;}
-.streak-pip.current{background:rgba(180,130,40,0.3);border-color:rgba(200,160,70,0.6);color:var(--gold2);box-shadow:0 0 6px rgba(180,130,40,0.3);}
-.streak-pip.boss{width:26px;height:26px;background:rgba(120,50,160,0.2);border-color:rgba(150,80,190,0.5);color:#c090e0;}
+.streak-display{display:flex;align-items:center;gap:4px;}
+.streak-pip{
+  width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-title);font-size:10px;font-weight:700;
+  color:rgba(255,255,255,0.2);
+  position:relative;transition:all 0.3s;
+  background:url('icon_streak.png') center/contain no-repeat;
+}
+.streak-pip span{position:relative;z-index:1;margin-top:-4px;}
+.streak-pip.done span{color:#fff;text-shadow:0 0 6px rgba(80,200,100,0.9);}
+.streak-pip.current span{color:#fff;text-shadow:0 0 8px rgba(220,170,60,1);}
+.streak-pip.boss{width:44px;height:44px;font-size:11px;}
+.streak-pip.boss span{color:#c090e0;text-shadow:0 0 8px rgba(180,80,220,0.9);}
 .top-title{font-family:var(--font-title);font-size:15px;color:var(--gold2);letter-spacing:2px;}
 
 /* MODIFIER BAR */
@@ -113,11 +126,45 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 .battlefield{grid-row:3/5;grid-column:2/3;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:14px;gap:10px;overflow:hidden;}
 
 /* COMBATANT */
-.combatant{width:100%;max-width:440px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:4px;padding:12px 14px;}
-.combatant.enemy{border-color:rgba(160,80,80,0.3);}
-.combatant.player{border-color:rgba(80,130,160,0.3);}
-.combatant-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.combatant-name{font-family:var(--font-title);font-size:13px;color:var(--gold2);}
+.combatant{width:100%;max-width:440px;background:rgba(0,0,0,0.25);border-radius:4px;padding:12px 14px;position:relative;}
+.combatant.enemy{
+  border:2px solid #c03030;
+  box-shadow:0 0 18px rgba(180,30,30,0.4), inset 0 0 24px rgba(180,30,30,0.07);
+  background:linear-gradient(160deg,rgba(80,10,10,0.3) 0%,rgba(0,0,0,0.25) 100%);
+}
+/* Grungy corner accents — enemy red */
+.combatant.enemy::before{
+  content:'';position:absolute;inset:-2px;border-radius:4px;pointer-events:none;z-index:1;
+  background:
+    linear-gradient(90deg,#c03030 0%,#c03030 18px,transparent 18px) top left/100% 2px no-repeat,
+    linear-gradient(90deg,transparent calc(100% - 18px),#c03030 calc(100% - 18px)) top right/100% 2px no-repeat,
+    linear-gradient(90deg,#c03030 0%,#c03030 18px,transparent 18px) bottom left/100% 2px no-repeat,
+    linear-gradient(90deg,transparent calc(100% - 18px),#c03030 calc(100% - 18px)) bottom right/100% 2px no-repeat,
+    linear-gradient(180deg,#c03030 0%,#c03030 18px,transparent 18px) top left/2px 100% no-repeat,
+    linear-gradient(180deg,transparent calc(100% - 18px),#c03030 calc(100% - 18px)) bottom left/2px 100% no-repeat,
+    linear-gradient(180deg,#c03030 0%,#c03030 18px,transparent 18px) top right/2px 100% no-repeat,
+    linear-gradient(180deg,transparent calc(100% - 18px),#c03030 calc(100% - 18px)) bottom right/2px 100% no-repeat;
+}
+.combatant.player{
+  border:2px solid #20c0a0;
+  box-shadow:0 0 18px rgba(20,180,150,0.4), inset 0 0 24px rgba(20,180,150,0.07);
+  background:linear-gradient(160deg,rgba(0,50,40,0.3) 0%,rgba(0,0,0,0.25) 100%);
+}
+/* Grungy corner accents — player teal */
+.combatant.player::before{
+  content:'';position:absolute;inset:-2px;border-radius:4px;pointer-events:none;z-index:1;
+  background:
+    linear-gradient(90deg,#20c0a0 0%,#20c0a0 18px,transparent 18px) top left/100% 2px no-repeat,
+    linear-gradient(90deg,transparent calc(100% - 18px),#20c0a0 calc(100% - 18px)) top right/100% 2px no-repeat,
+    linear-gradient(90deg,#20c0a0 0%,#20c0a0 18px,transparent 18px) bottom left/100% 2px no-repeat,
+    linear-gradient(90deg,transparent calc(100% - 18px),#20c0a0 calc(100% - 18px)) bottom right/100% 2px no-repeat,
+    linear-gradient(180deg,#20c0a0 0%,#20c0a0 18px,transparent 18px) top left/2px 100% no-repeat,
+    linear-gradient(180deg,transparent calc(100% - 18px),#20c0a0 calc(100% - 18px)) bottom left/2px 100% no-repeat,
+    linear-gradient(180deg,#20c0a0 0%,#20c0a0 18px,transparent 18px) top right/2px 100% no-repeat,
+    linear-gradient(180deg,transparent calc(100% - 18px),#20c0a0 calc(100% - 18px)) bottom right/2px 100% no-repeat;
+}
+.combatant-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px;}
+.combatant-name{font-family:var(--font-title);font-size:13px;color:var(--gold2);flex:1;}
 .combatant-status{display:flex;gap:5px;flex-wrap:wrap;}
 .status-pill{font-size:10px;padding:2px 6px;border-radius:10px;font-family:var(--font-title);letter-spacing:0.5px;}
 .s-burning{background:rgba(180,80,20,0.3);color:#e08050;border:1px solid rgba(180,80,20,0.4);}
@@ -131,7 +178,7 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 
 /* HP BARS */
 .hp-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
-.hp-icon{font-family:var(--font-title);font-size:10px;color:var(--text3);width:56px;flex-shrink:0;}
+.hp-icon{font-family:var(--font-title);font-size:11px;color:var(--gold2);width:46px;flex-shrink:0;letter-spacing:1px;}
 .hp-bar-wrap{flex:1;height:9px;background:rgba(0,0,0,0.4);border-radius:5px;overflow:hidden;border:1px solid rgba(180,150,90,0.1);}
 .hp-bar{height:100%;border-radius:5px;transition:width 0.4s ease;}
 .hp-bar.ship{background:linear-gradient(90deg,#2a6a9a,#4a9ad4);}
@@ -147,28 +194,33 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 
 /* RIGHT PANEL */
 .right-panel{grid-row:3/6;grid-column:3/4;border-left:1px solid var(--border);padding:12px;background:rgba(0,0,0,0.12);display:flex;flex-direction:column;gap:14px;overflow-y:auto;overflow-x:hidden;height:0;min-height:100%;}
-.panel-section{text-align:center;}
-.panel-label{font-family:var(--font-title);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold3);margin-bottom:6px;}
-.mana-pips{display:flex;justify-content:center;gap:4px;flex-wrap:wrap;}
-.mana-pip{width:16px;height:16px;border-radius:50%;background:rgba(50,120,200,0.6);border:1px solid rgba(80,160,240,0.5);transition:all 0.3s;}
-.mana-pip.spent{background:rgba(30,40,60,0.5);border-color:rgba(80,100,140,0.2);}
-.mana-val{font-family:var(--font-title);font-size:11px;color:var(--text2);margin-top:4px;}
-.turn-num{font-family:var(--font-title);font-size:22px;color:var(--gold2);}
+.panel-section{text-align:center;width:100%;}
+.panel-label{font-family:var(--font-title);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.mana-pips{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;}
+.mana-pip{width:24px;height:24px;border-radius:50%;background:rgba(50,120,200,0.75);border:2px solid rgba(80,160,240,0.8);transition:all 0.3s;box-shadow:0 0 8px rgba(80,160,240,0.35);}
+.mana-pip.spent{background:rgba(20,30,50,0.5);border-color:rgba(60,80,120,0.25);box-shadow:none;}
+.mana-val{font-family:var(--font-title);font-size:17px;color:var(--gold2);margin-top:7px;}
+.turn-num{font-family:var(--font-title);font-size:36px;color:var(--gold2);line-height:1;}
 .deck-info{font-family:var(--font-title);font-size:11px;color:var(--text2);}
 .deck-sub{font-size:10px;color:var(--text3);margin-top:2px;}
-.end-turn-btn{font-family:var(--font-title);font-size:10px;letter-spacing:2px;text-transform:uppercase;background:rgba(180,130,40,0.15);color:var(--gold);border:1px solid rgba(180,130,40,0.3);border-radius:2px;padding:8px 12px;cursor:pointer;transition:all 0.2s;width:100%;}
-.end-turn-btn:hover:not(:disabled){background:rgba(180,130,40,0.25);}
-.end-turn-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.end-turn-btn{font-family:var(--font-title);font-size:11px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(160deg,rgba(200,150,60,0.4),rgba(140,90,20,0.4));color:var(--gold2);border:1px solid rgba(200,150,60,0.6);border-radius:3px;padding:10px 12px;cursor:pointer;transition:all 0.2s;width:100%;box-shadow:0 0 10px rgba(180,130,40,0.2);}
+.end-turn-btn:not(:disabled){animation:end-turn-pulse 1.8s ease-in-out infinite;}
+@keyframes end-turn-pulse{
+  0%,100%{box-shadow:0 0 8px rgba(200,150,60,0.3);border-color:rgba(200,150,60,0.6);color:var(--gold2);}
+  50%{box-shadow:0 0 22px rgba(200,150,60,0.8),0 0 40px rgba(200,150,60,0.3);border-color:rgba(220,180,80,1);color:#fff;}
+}
+.end-turn-btn:hover:not(:disabled){background:linear-gradient(160deg,rgba(200,150,60,0.65),rgba(140,90,20,0.65));border-color:var(--gold);box-shadow:0 0 28px rgba(180,130,40,0.9);color:#fff;animation:none;}
+.end-turn-btn:disabled{opacity:0.25;cursor:not-allowed;box-shadow:none;animation:none;}
 .ai-thinking{font-family:var(--font-title);font-size:10px;letter-spacing:1px;color:var(--gold3);text-align:center;animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
 
 /* HAND */
-.hand-area{grid-row:5/6;grid-column:2/3;padding:10px 14px 14px;border-top:1px solid var(--border);overflow-x:auto;overflow-y:hidden;}
+.hand-area{grid-row:5/6;grid-column:2/3;padding:10px 14px 14px;border-top:1px solid var(--border);overflow-x:auto;overflow-y:hidden;min-height:260px;}
 .hand-label{font-family:var(--font-title);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold3);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-.hand-cards{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.hand-cards{display:flex;gap:10px;justify-content:center;flex-wrap:nowrap;}
 
 /* CARDS */
-.card{width:130px;min-height:175px;border-radius:4px;border:1px solid var(--border);padding:8px;cursor:pointer;transition:transform 0.2s,border-color 0.2s;position:relative;display:flex;flex-direction:column;background:var(--bg3);overflow:hidden;}
+.card{width:165px;min-height:220px;border-radius:4px;border:1px solid var(--border);padding:8px;cursor:pointer;transition:transform 0.2s,border-color 0.2s;position:relative;display:flex;flex-direction:column;background:var(--bg3);overflow:hidden;}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
 .card.naval{background:var(--naval);}
 .card.naval::before{background:var(--naval-b);}
@@ -226,7 +278,7 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 #card-spotlight.visible{opacity:1;}
 .spotlight-inner{text-align:center;}
 .spotlight-who{font-family:var(--font-title);font-size:13px;color:var(--gold2);margin-bottom:12px;letter-spacing:2px;}
-.spotlight-card{width:220px;min-height:290px;transform:scale(0.85);transition:transform 0.2s;}
+.spotlight-card{width:260px;min-height:345px;transform:scale(0.85);transition:transform 0.2s;}
 #card-spotlight.visible .spotlight-card{transform:scale(1);}
 
 /* REWARD */
@@ -245,6 +297,96 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 .gameover-title{font-family:var(--font-title);font-size:40px;color:var(--gold2);margin-bottom:12px;}
 .gameover-sub{font-family:var(--font-body);font-style:italic;font-size:18px;color:var(--text2);margin-bottom:32px;}
 
+/* DECK & DISCARD PILES */
+.piles-row{display:flex;align-items:center;justify-content:center;gap:28px;padding:6px 0 2px;}
+.pile-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.pile-label{font-family:var(--font-title);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold3);}
+.pile-count{font-family:var(--font-title);font-size:13px;color:var(--gold2);}
+.pile{width:48px;height:68px;border-radius:4px;position:relative;}
+.deck-pile{border:1px solid rgba(180,150,90,0.4);background:var(--bg3);overflow:hidden;}
+.deck-pile img{width:100%;height:100%;object-fit:cover;border-radius:3px;display:block;}
+/* Dynamic thickness layers — controlled via JS data-count attribute */
+.deck-pile::before,.deck-pile::after{content:'';position:absolute;border-radius:4px;border:1px solid rgba(180,150,90,0.2);background:var(--bg3);background-image:url('cards/cardback.png');background-size:cover;background-position:center;}
+.deck-pile[data-count="0"]::before,.deck-pile[data-count="0"]::after{display:none;}
+.deck-pile[data-count="0"]{opacity:0.2;}
+/* 1-5 cards — thin pile, 1 layer only */
+.deck-pile[data-thin="1"]::before{top:-2px;left:-2px;right:2px;bottom:2px;z-index:-1;}
+.deck-pile[data-thin="1"]::after{display:none;}
+/* 6-15 cards — medium pile, 2 layers */
+.deck-pile[data-thin="2"]::before{top:-3px;left:-3px;right:3px;bottom:3px;z-index:-1;}
+.deck-pile[data-thin="2"]::after{top:-6px;left:-6px;right:6px;bottom:6px;z-index:-2;}
+/* 16+ cards — thick pile, 2 layers more offset */
+.deck-pile[data-thin="3"]::before{top:-4px;left:-4px;right:4px;bottom:4px;z-index:-1;}
+.deck-pile[data-thin="3"]::after{top:-8px;left:-8px;right:8px;bottom:8px;z-index:-2;}
+.deck-pile-inner{width:100%;height:100%;border-radius:3px;}
+.discard-pile{border:1px solid rgba(180,150,90,0.25);background:rgba(0,0,0,0.3);overflow:hidden;border-radius:4px;}
+.discard-pile img{width:100%;height:100%;object-fit:cover;border-radius:3px;}
+.discard-pile.empty{border:1px dashed rgba(180,150,90,0.12);display:flex;align-items:center;justify-content:center;color:var(--gold3);font-size:18px;opacity:0.3;}
+@keyframes shuffle-anim{
+  0%{transform:translateX(0) rotate(0);}
+  20%{transform:translateX(-15px) rotate(-8deg);}
+  40%{transform:translateX(15px) rotate(8deg);}
+  60%{transform:translateX(-8px) rotate(-4deg);}
+  80%{transform:translateX(8px) rotate(4deg);}
+  100%{transform:translateX(0) rotate(0);}
+}
+.shuffling{animation:shuffle-anim 0.7s ease-in-out;}
+@keyframes card-draw{0%{transform:scale(0.6) translateY(25px);opacity:0;}100%{transform:scale(1) translateY(0);opacity:1;}}
+.card-drawing{animation:card-draw 0.22s ease-out;}
+
+/* WOOD ACTION BAR */
+.wood-bar{
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0,0,0,0) 0px, rgba(0,0,0,0) 40px,
+      rgba(0,0,0,0.06) 40px, rgba(0,0,0,0.06) 42px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px,
+      transparent 1px, transparent 4px
+    ),
+    linear-gradient(180deg, #2a1e0f 0%, #1e1508 50%, #2a1e0f 100%);
+  border-top:2px solid #5a3e1a;
+  border-bottom:1px solid #0a0805;
+  box-shadow:0 -2px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,200,100,0.08);
+  padding:10px 16px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.wood-section{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.wood-label{font-family:var(--font-title);font-size:9px;letter-spacing:2px;color:rgba(180,140,70,0.6);text-transform:uppercase;}
+.wood-divider{width:1px;height:40px;background:linear-gradient(180deg,transparent,rgba(180,140,70,0.25),transparent);margin:0 4px;}
+.wood-cards-wrap{flex:1;display:flex;align-items:center;gap:10px;overflow-x:auto;padding:4px 0;}
+.wood-end-btn{
+  font-family:var(--font-title);font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  background:linear-gradient(160deg,rgba(180,130,40,0.3),rgba(120,80,20,0.3));
+  color:var(--gold);
+  border:1px solid rgba(180,130,40,0.5);
+  border-radius:3px;
+  padding:10px 16px;cursor:pointer;
+  transition:all 0.2s;
+  white-space:nowrap;
+  box-shadow:inset 0 1px 0 rgba(255,200,100,0.1);
+}
+.wood-end-btn:hover:not(:disabled){background:linear-gradient(160deg,rgba(180,130,40,0.5),rgba(120,80,20,0.5));border-color:var(--gold);}
+.wood-end-btn:disabled{opacity:0.3;cursor:not-allowed;}
+
+/* TOOLTIPS */
+.has-tooltip{position:relative;}
+.has-tooltip .tooltip-box{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:rgba(10,12,15,0.97);border:1px solid rgba(180,150,90,0.35);
+  border-radius:4px;padding:8px 12px;
+  font-family:var(--font-body);font-size:12px;color:var(--text);
+  z-index:9999;pointer-events:none;
+  min-width:180px;max-width:260px;white-space:normal;text-align:center;
+  line-height:1.5;
+}
+.has-tooltip:hover .tooltip-box{display:block;}
+
 /* FLOAT NUMBERS */
 .float-num{position:absolute;font-family:var(--font-title);font-size:18px;font-weight:600;pointer-events:none;z-index:500;animation:float-up 1s ease-out forwards;}
 .float-num.dmg{color:#f06060;}
@@ -259,6 +401,20 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 ::-webkit-scrollbar-thumb{background:rgba(180,150,90,0.2);border-radius:2px;}
 
 #zone-timer{font-family:var(--font-title);font-size:10px;color:#d04040;margin-left:auto;}
+
+/* RUN TIMER */
+#run-timer{
+  position:fixed;bottom:20px;right:20px;
+  z-index:500;
+  font-family:var(--font-title);font-size:22px;letter-spacing:3px;
+  color:var(--gold2);
+  background:rgba(0,0,0,0.65);
+  border:1px solid rgba(180,150,90,0.3);
+  border-radius:8px;
+  padding:10px 20px;
+  display:none;
+  text-shadow:0 0 20px rgba(200,150,60,0.4);
+}
 </style>
 </head>
 <body>
@@ -271,9 +427,19 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
   <div class="intro-sub">The Card Game</div>
   <div class="intro-divider"><div class="intro-line"></div><span style="color:var(--gold3)">☠</span><div class="intro-line"></div></div>
   <div class="intro-tagline">Raise the anchor. The duel begins.</div>
-  <button class="btn" onclick="startGame()">Set Sail</button>
+  <button class="btn pulse-btn" onclick="startGame()">Set Sail</button>
   <div style="font-size:15px;color:var(--text2);margin-top:14px;">Reach streak 10 · Lose and start over</div>
   <button class="btn-ghost" onclick="openRules()" style="margin-top:20px;letter-spacing:3px;">☠ Rules</button>
+  <!-- Audio controls visible from homepage -->
+  <div id="audio-controls-intro" style="display:flex;align-items:center;gap:12px;margin-top:28px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:20px;padding:8px 18px;">
+    <button id="music-btn-intro" onclick="toggleMusic()" style="background:none;border:none;color:var(--gold);font-size:13px;cursor:pointer;padding:0;">🔊</button>
+    <span style="font-family:var(--font-title);font-size:9px;letter-spacing:2px;color:var(--gold3);">MUSIC</span>
+    <input id="music-vol-intro" type="range" min="0" max="100" value="35" oninput="setMusicVolumeAll(this.value)" style="width:60px;">
+    <div style="width:1px;height:20px;background:var(--border);margin:0 4px;"></div>
+    <button id="sfx-btn-intro" onclick="toggleSFX()" style="background:none;border:none;color:var(--gold);font-size:13px;cursor:pointer;padding:0;">🔔</button>
+    <span style="font-family:var(--font-title);font-size:9px;letter-spacing:2px;color:var(--gold3);">SFX</span>
+    <input id="sfx-vol-intro" type="range" min="0" max="100" value="85" oninput="setSFXVolumeAll(this.value)" style="width:60px;">
+  </div>
 </div>
 
 <!-- RULES MODAL -->
@@ -343,7 +509,7 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
   <div class="mod-battle-num" id="mod-battle-num">Battle I</div>
   <div class="mod-battle-name" id="mod-battle-name">Open Waters</div>
   <div class="mod-battle-desc" id="mod-battle-desc">A clean first duel. No tricks — yet.</div>
-  <button class="btn" onclick="startBattle()">Begin Battle</button>
+  <button class="btn pulse-btn" onclick="startBattle()">Begin Battle</button>
 </div>
 
 <!-- GAME -->
@@ -352,8 +518,19 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
 
     <div class="top-bar">
       <div class="streak-display" id="streak-display"></div>
-      <div class="top-title">HOURGLASS</div>
-      <span style="font-family:var(--font-title);font-size:11px;color:var(--gold3);" id="battle-label">Battle I</span>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div class="top-title">HOURGLASS</div>
+        <div id="run-timer" style="position:static;transform:none;background:none;border:none;padding:0;font-size:12px;letter-spacing:2px;color:var(--gold3);display:none;">⏱ 00:00</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button id="music-btn" onclick="toggleMusic()" style="background:none;border:none;color:var(--gold);font-size:12px;cursor:pointer;padding:0;line-height:1;">🔊</button>
+        <span style="font-family:var(--font-title);font-size:8px;letter-spacing:1px;color:var(--gold3);">MUSIC</span>
+        <input id="music-vol" type="range" min="0" max="100" value="8" oninput="setMusicVolumeAll(this.value)" style="width:45px;">
+        <button id="sfx-btn" onclick="toggleSFX()" style="background:none;border:none;color:var(--gold);font-size:12px;cursor:pointer;padding:0;line-height:1;margin-left:4px;">🔔</button>
+        <span style="font-family:var(--font-title);font-size:8px;letter-spacing:1px;color:var(--gold3);">SFX</span>
+        <input id="sfx-vol" type="range" min="0" max="100" value="85" oninput="setSFXVolumeAll(this.value)" style="width:45px;">
+        <span style="font-family:var(--font-title);font-size:11px;color:var(--gold3);margin-left:6px;" id="battle-label">Battle I</span>
+      </div>
     </div>
 
     <div class="modifier-bar">
@@ -368,49 +545,89 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
     </div>
 
     <div class="battlefield">
-      <div class="combatant enemy" id="enemy-combatant">
-        <div class="combatant-header">
-          <div class="combatant-name">⚔ Enemy</div>
-          <div class="combatant-status" id="enemy-status"></div>
+
+      <!-- ENEMY COMBATANT -->
+      <div style="display:flex;align-items:center;gap:12px;width:100%;max-width:520px;">
+        <!-- Deck pile left -->
+        <div class="pile-wrap" style="flex-shrink:0;align-items:center;">
+          <div class="pile deck-pile" id="enemy-deck-pile" data-count="0" data-thin="2" style="width:40px;height:56px;">
+            <div class="deck-pile-inner"><img src="cards/cardback.png" alt="deck" style="width:100%;height:100%;object-fit:cover;border-radius:3px;"></div>
+          </div>
+          <div class="pile-label" style="font-size:8px;">Deck</div>
+          <div class="pile-count" id="enemy-deck-num" style="font-size:10px;">0</div>
         </div>
-        <div class="hp-row">
-          <span class="hp-icon">⛵ Ship</span>
-          <div class="hp-bar-wrap"><div class="hp-bar ship" id="enemy-ship-bar" style="width:100%"></div></div>
-          <span class="hp-val" id="enemy-ship-val">15/15</span>
+        <!-- Main block -->
+        <div class="combatant enemy" id="enemy-combatant" style="flex:1;">
+          <div class="combatant-header">
+            <img src="icon_reaper.png" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:50%;border:1px solid rgba(180,80,80,0.4);flex-shrink:0;" onerror="this.style.display='none'">
+            <div class="combatant-name">Servants of the Flame</div>
+            <div class="combatant-status" id="enemy-status"></div>
+          </div>
+          <div class="hp-row">
+            <span class="hp-icon">Ship</span>
+            <div class="hp-bar-wrap"><div class="hp-bar ship" id="enemy-ship-bar" style="width:100%"></div></div>
+            <span class="hp-val" id="enemy-ship-val">17/17</span>
+          </div>
+          <div class="hp-row">
+            <span class="hp-icon">Pirate</span>
+            <div class="hp-bar-wrap"><div class="hp-bar pirate" id="enemy-pirate-bar" style="width:100%"></div></div>
+            <span class="hp-val" id="enemy-pirate-val">5/5</span>
+          </div>
+          <div id="enemy-dead-msg"></div>
         </div>
-        <div class="hp-row">
-          <span class="hp-icon">🏴‍☠️ Pirate</span>
-          <div class="hp-bar-wrap"><div class="hp-bar pirate" id="enemy-pirate-bar" style="width:100%"></div></div>
-          <span class="hp-val" id="enemy-pirate-val">6/6</span>
+        <!-- Discard pile right -->
+        <div class="pile-wrap" style="flex-shrink:0;align-items:center;">
+          <div class="pile discard-pile empty" id="enemy-discard-pile" style="width:40px;height:56px;"></div>
+          <div class="pile-label" style="font-size:8px;">Discard</div>
+          <div class="pile-count" id="enemy-discard-num" style="font-size:10px;">0</div>
         </div>
-        <div id="enemy-dead-msg"></div>
-        <div style="font-size:10px;color:var(--text3);margin-top:5px;" id="enemy-hand-info"></div>
       </div>
 
       <div class="battle-center">
         <div class="center-msg" id="center-msg">Loading...</div>
+        <div id="enemy-last-turn" style="display:none;margin-top:8px;font-size:11px;color:var(--text3);text-align:center;font-family:var(--font-title);letter-spacing:1px;"></div>
       </div>
 
-      <div class="combatant player" id="player-combatant">
-        <div class="combatant-header">
-          <div class="combatant-name">⚓ You</div>
-          <div class="combatant-status" id="player-status"></div>
+      <!-- PLAYER COMBATANT -->
+      <div style="display:flex;align-items:center;gap:12px;width:100%;max-width:520px;">
+        <!-- Deck pile left -->
+        <div class="pile-wrap" style="flex-shrink:0;align-items:center;">
+          <div class="pile deck-pile" id="player-deck-pile" data-count="0" data-thin="2" style="width:40px;height:56px;">
+            <div class="deck-pile-inner"><img src="cards/cardback.png" alt="deck"></div>
+          </div>
+          <div class="pile-label" style="font-size:8px;">Deck</div>
+          <div class="pile-count" id="player-deck-num" style="font-size:10px;">0</div>
         </div>
-        <div class="hp-row">
-          <span class="hp-icon">⛵ Ship</span>
-          <div class="hp-bar-wrap"><div class="hp-bar ship" id="player-ship-bar" style="width:100%"></div></div>
-          <span class="hp-val" id="player-ship-val">15/15</span>
+        <!-- Main block -->
+        <div class="combatant player" id="player-combatant" style="flex:1;">
+          <div class="combatant-header">
+            <img src="icon_athena.png" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:50%;border:1px solid rgba(80,130,180,0.4);flex-shrink:0;" onerror="this.style.display='none'">
+            <div class="combatant-name">Guardians of Fortune</div>
+            <div class="combatant-status" id="player-status"></div>
+          </div>
+          <div class="hp-row">
+            <span class="hp-icon">Ship</span>
+            <div class="hp-bar-wrap"><div class="hp-bar ship" id="player-ship-bar" style="width:100%"></div></div>
+            <span class="hp-val" id="player-ship-val">17/17</span>
+          </div>
+          <div class="hp-row">
+            <span class="hp-icon">Pirate</span>
+            <div class="hp-bar-wrap"><div class="hp-bar pirate" id="player-pirate-bar" style="width:100%"></div></div>
+            <span class="hp-val" id="player-pirate-val">5/5</span>
+          </div>
+          <div id="player-dead-msg"></div>
         </div>
-        <div class="hp-row">
-          <span class="hp-icon">🏴‍☠️ Pirate</span>
-          <div class="hp-bar-wrap"><div class="hp-bar pirate" id="player-pirate-bar" style="width:100%"></div></div>
-          <span class="hp-val" id="player-pirate-val">6/6</span>
+        <!-- Discard pile right -->
+        <div class="pile-wrap" style="flex-shrink:0;align-items:center;">
+          <div class="pile discard-pile empty" id="player-discard-pile" style="width:40px;height:56px;"></div>
+          <div class="pile-label" style="font-size:8px;">Discard</div>
+          <div class="pile-count" id="player-discard-num" style="font-size:10px;">0</div>
         </div>
-        <div id="player-dead-msg"></div>
       </div>
+
     </div>
 
-    <div class="right-panel">
+    <div class="right-panel" style="justify-content:center;">
       <div class="panel-section">
         <div class="panel-label">Mana</div>
         <div class="mana-pips" id="mana-pips"></div>
@@ -419,11 +636,6 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.35);z-ind
       <div class="panel-section">
         <div class="panel-label">Turn</div>
         <div class="turn-num" id="turn-num">1</div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-label">Deck</div>
-        <div class="deck-info" id="deck-count">— cards</div>
-        <div class="deck-sub" id="discard-count">— discarded</div>
       </div>
       <button class="end-turn-btn" id="end-turn-btn" onclick="endPlayerTurn()" disabled>End Turn</button>
       <div class="ai-thinking" id="ai-thinking" style="display:none;">Enemy thinking...</div>
@@ -481,7 +693,7 @@ const BASE_CARDS = [
   {id:'firebomb',name:'Firebomb',type:'naval',cost:2,copies:1,effect:'Burning: 1 ship dmg/turn for 4 turns.',fn:'firebomb'},
   {id:'scattershot',name:'Scattershot',type:'naval',cost:2,copies:1,effect:'2 ship dmg/turn for 2 turns.',fn:'scattershot'},
   {id:'chainshot',name:'Chainshot',type:'naval',cost:2,copies:1,effect:'1 ship dmg. Opponent plays 1 card max next turn.',fn:'chainshot'},
-  {id:'ballastball',name:'Ballast Ball',type:'naval',cost:3,copies:1,consumed:true,effect:'Deal 6 damage to the enemy ship.',fn:'dealShipDmg',val:6},
+  {id:'ballastball',name:'Ballast Ball',type:'naval',cost:3,copies:1,consumed:true,effect:'Deal 5 damage to the enemy ship.',fn:'dealShipDmg',val:5},
   {id:'pistolshot',name:'Pistol Shot',type:'pirate',cost:1,copies:1,effect:'Deal 2 damage to the enemy pirate.',fn:'dealPirateDmg',val:2},
   {id:'sworddash',name:'Sword Dash',type:'pirate',cost:2,copies:1,effect:'Deal 3 damage to the enemy pirate.',fn:'dealPirateDmg',val:3},
   {id:'doubletap',name:'Double Tap',type:'pirate',cost:1,copies:1,effect:'1 pirate dmg now. 2 more at start of next turn.',fn:'doubletap'},
@@ -501,7 +713,7 @@ const BASE_CARDS = [
   {id:'grogdrink',name:'Grog Drink',type:'chaos',cost:1,copies:1,effect:'+2 mana this turn. Your pirate takes 1 damage.',fn:'grogdrink'},
   {id:'pirateshanty',name:'Pirate Shanty',type:'chaos',cost:1,copies:1,effect:'No attack cards from either player next turn.',fn:'pirateshanty'},
   {id:'anchorball',name:'Anchorball',type:'chaos',cost:3,copies:1,consumed:true,effect:'Opponent skips their entire next turn.',fn:'anchorball'},
-  {id:'bonecaller',name:'BoneCaller',type:'chaos',cost:2,copies:1,effect:'This turn: ship dmg −1, pirate dmg +2.',fn:'bonecaller'},
+  {id:'bonecaller',name:'BoneCaller',type:'chaos',cost:2,copies:1,effect:'Deal 3 pirate dmg. If their pirate is dead this turn, deal 3 ship dmg instead.',fn:'bonecaller'},
   // Raise Sails & Crow's Nest moved to rewards only — draw cards have no value in auto-fill hand system
 ];
 
@@ -513,7 +725,7 @@ const REWARD_CARDS = [
   {id:'r_sharpshoot',name:'Sharpshooter',type:'pirate',cost:1,reward:true,tier:'common',effect:'Deal 3 damage to the enemy pirate.',fn:'dealPirateDmg',val:3},
   {id:'r_loadchain',name:'Loaded Chainshot',type:'naval',cost:2,reward:true,tier:'common',effect:'2 ship dmg. Opponent plays 1 card max next turn.',fn:'chainshot_loaded'},
   {id:'r_salvage',name:'Shipwreck Salvage',type:'repair',cost:1,reward:true,tier:'common',effect:'Restore 2 ship HP and draw 1 card.',fn:'shipwrecksalvage'},
-  {id:'r_davyjones',name:"Davy Jones' Locker",type:'chaos',cost:0,reward:true,tier:'common',effect:'Banish one card from your hand permanently this run.',fn:'davyjones'},
+  // Davy Jones' Locker removed — caused bugs for both players
   {id:'r_raisesails',name:'Raise Sails',type:'chaos',cost:1,reward:true,tier:'common',effect:'Draw 2 cards.',fn:'draw',val:2},
   {id:'r_crowsnest',name:"Crow's Nest",type:'chaos',cost:1,reward:true,tier:'common',effect:'Draw 1 card.',fn:'draw',val:1},
   {id:'r_tuck',name:'Tuck',type:'chaos',cost:1,reward:true,tier:'common',effect:'Your pirate cannot be targeted this turn.',fn:'tuck'},
@@ -528,7 +740,7 @@ const REWARD_CARDS = [
   {id:'r_fell',name:'Fell Overboard',type:'pirate',cost:1,reward:true,tier:'common',effect:'3 pirate dmg to them. Your pirate takes 1.',fn:'felloverboard'},
   {id:'r_alliance',name:'Alliance Flag',type:'chaos',cost:2,reward:true,tier:'common',effect:'All your cards cost 1 less mana this turn.',fn:'allianceflag'},
   {id:'r_sharkbait',name:'Shark Bait',type:'pirate',cost:1,reward:true,tier:'common',effect:'4 pirate dmg to them. Your pirate takes 2.',fn:'sharkbait'},
-  {id:'r_swordlord',name:'Sword Lord',type:'pirate',cost:1,reward:true,tier:'common',effect:'2 pirate dmg. 3 turns in a row = deal 4 instead.',fn:'swordlord'},
+  {id:'r_swordlord',name:'Sword Lord',type:'pirate',cost:1,reward:true,tier:'common',effect:'2 pirate dmg. 2 turns in a row = deal 4 instead.',fn:'swordlord'},
   {id:'r_hull',name:'Hull Reinforcement',type:'repair',cost:0,reward:true,tier:'common',runBonus:true,effect:'Your ship starts each battle with +2 max HP this run.',fn:'rb_hull'},
   {id:'r_rations',name:'Extra Rations',type:'heal',cost:0,reward:true,tier:'common',runBonus:true,effect:'All your heals restore +1 HP this run.',fn:'rb_rations'},
   {id:'r_powder',name:'Powder Store',type:'naval',cost:0,reward:true,tier:'common',runBonus:true,effect:'Your Cannonballs deal +1 damage this run.',fn:'rb_powder'},
@@ -540,7 +752,7 @@ const REWARD_CARDS = [
   {id:'r_upgpistol',name:'Upgrade: Pistol Shot',type:'pirate',cost:0,reward:true,tier:'common',runBonus:true,effect:'Replace Pistol Shot in your deck with Sharpshooter (3 dmg, 1 mana).',fn:'rb_upgpistol'},
   // RARE
   {id:'r_sirenskull',name:'Siren Song Skull',type:'chaos',cost:2,reward:true,tier:'rare',effect:'Steal top card of opponent discard into your hand.',fn:'sirensongskull'},
-  {id:'r_volcanic',name:'Volcanic Rock',type:'naval',cost:2,reward:true,tier:'rare',effect:'5 ship dmg. 30% chance it hits your ship instead.',fn:'volcanicrock'},
+  {id:'r_volcanic',name:'Volcanic Rock',type:'naval',cost:0,reward:true,tier:'rare',effect:'5 ship dmg. 30% chance it hits your ship instead.',fn:'volcanicrock'},
   {id:'r_fort',name:'Fort of the Damned',type:'naval',cost:3,reward:true,tier:'rare',effect:'4 ship dmg. If your pirate is dead: deal 7.',fn:'fortofthedamned'},
   {id:'r_reaperb',name:"Reaper's Bounty",type:'naval',cost:2,reward:true,tier:'rare',effect:'5 ship dmg. Your ship takes 2 damage.',fn:'reapersbounty'},
   {id:'r_spawnkill',name:'Spawn Kill',type:'pirate',cost:2,reward:true,tier:'rare',effect:"Opponent just respawned? Deal 6 pirate dmg.",fn:'spawnkill'},
@@ -568,14 +780,14 @@ const REWARD_CARDS = [
 const BATTLES = [
   {num:1,name:'Open Waters',icon:'⚓',desc:'A clean first duel. No tricks — yet.',short:'No modifiers.',mod:'none'},
   {num:2,name:'Storm Brewing',icon:'⛈',desc:'Both ships take 2 damage at the end of every 3rd turn.',short:'Storm: 2 ship dmg every 3 turns.',mod:'storm'},
-  {num:3,name:'Megalodon Waters',icon:'🦈',desc:'Every 5 turns, the megalodon strikes a random ship for 5 damage.',short:'Megalodon strikes every 5 turns.',mod:'megalodon'},
-  {num:4,name:'Skeleton Armada',icon:'💀',desc:'Every 3 turns, skeleton ship fires 3 damage at the ship with the most HP.',short:'Skeleton ship targets highest HP every 3 turns.',mod:'skeleton'},
-  {num:5,name:'Cursed Waters',icon:'🌊',desc:'All healing effects reduced by 1 this battle.',short:'All healing −1.',mod:'cursed'},
+  {num:3,name:'Cursed Waters',icon:'🌊',desc:'All healing effects reduced by 1 this battle.',short:'All healing −1.',mod:'cursed'},
+  {num:4,name:'The Final Tide',icon:'🌋',desc:'The Red Sea closes in. Escalating zone damage every 3 turns. Lowest HP when zone closes = sunk.',short:'Red Sea closes. Escalating zone damage.',mod:'redsea'},
+  {num:5,name:'Skeleton Armada',icon:'💀',desc:'Every 3 turns, skeleton ship fires 3 damage at the ship with the most HP.',short:'Skeleton ship targets highest HP every 3 turns.',mod:'skeleton'},
   {num:6,name:'Keg Run',icon:'💣',desc:"40% chance each turn a TNT Keg appears in your hand. Don't hold it.",short:'40% TNT Keg in hand each turn.',mod:'kegrun'},
-  {num:7,name:'Siren Fog',icon:'🌫',desc:'Both players draw 1 fewer card per turn — hand of 4.',short:'Hand reduced to 4.',mod:'sirenfog'},
-  {num:8,name:'Hit Reg Fiesta',icon:'🎲',desc:'All pirate damage cards have 50% chance to not register. Classic SoT.',short:'50% pirate cards miss.',mod:'hitreg'},
-  {num:9,name:'The Kraken Awakens',icon:'🐙',desc:'Every 4 turns the Kraken grabs a random ship — 3 damage + blocks naval cards 1 turn.',short:'Kraken every 4 turns: 3 dmg + no naval.',mod:'kraken'},
-  {num:10,name:'The Final Tide',icon:'🌋',desc:'The Red Sea closes in. Escalating zone damage every 3 turns. Lowest HP when zone closes = sunk.',short:'Red Sea closes. Escalating zone damage.',mod:'redsea'},
+  {num:7,name:'Megalodon Waters',icon:'🦈',desc:'Every 5 turns, the megalodon strikes a random ship for 5 damage.',short:'Megalodon strikes every 5 turns.',mod:'megalodon'},
+  {num:8,name:'Siren Fog',icon:'🌫',desc:'Both players draw 1 fewer card per turn — hand of 4.',short:'Hand reduced to 4.',mod:'sirenfog'},
+  {num:9,name:'Hit Reg Fiesta',icon:'🎲',desc:'All pirate damage cards have 50% chance to not register. Classic SoT.',short:'50% pirate cards miss.',mod:'hitreg'},
+  {num:10,name:'The Kraken Awakens',icon:'🐙',desc:'Every 4 turns the Kraken grabs a random ship — 3 damage + blocks naval cards 1 turn.',short:'Kraken every 4 turns: 3 dmg + no naval.',mod:'kraken'},
 ];
 
 const R = ['','I','II','III','IV','V','VI','VII','VIII','IX','X'];
@@ -603,8 +815,8 @@ function newG() {
 
 function newEntity(isP) {
   return {
-    shipHp:15, maxShipHp:15,
-    pirateHp:6, maxPirateHp:6,
+    shipHp:17, maxShipHp:17,
+    pirateHp:5, maxPirateHp:5,
     dead:false, deadTurns:0, justRespawned:false,
     pirateDotStacks:0, // DoT on ship per turn from pirate kills — cumulative
     st:{},
@@ -629,8 +841,8 @@ function newEntity(isP) {
 // ===================== SCREENS =====================
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');}
 
-function startGame(){G=newG();showModifier(0);}
-function resetGame(){G=newG();show('intro');}
+function startGame(){G=newG();startTimer();showModifier(0);}
+function resetGame(){G=newG();stopTimer();document.getElementById('run-timer').style.display='none';document.getElementById('fanproject-badge').style.display='block';show('intro');}
 
 function showModifier(idx){
   const b=BATTLES[idx];
@@ -717,6 +929,10 @@ function draw(who,n){
       if(!disc.length)break;
       deck.push(...shuffle(disc));disc.length=0;
       log('event','Deck reshuffled.');
+      // Animate the deck pile
+      const pileId=isP?'player-deck-pile':'enemy-deck-pile';
+      const pile=document.getElementById(pileId);
+      if(pile){pile.classList.remove('shuffling');void pile.offsetWidth;pile.classList.add('shuffling');setTimeout(()=>pile.classList.remove('shuffling'),700);}
     }
     hand.push(deck.shift());
   }
@@ -729,7 +945,8 @@ function renderHP(){
   hp('player',G.P);hp('enemy',G.E);
   document.getElementById('player-dead-msg').innerHTML=G.P.dead?'<div class="pirate-dead-msg">☠ Ferry of the Damned — skip next turn</div>':'';
   document.getElementById('enemy-dead-msg').innerHTML=G.E.dead?'<div class="pirate-dead-msg">☠ Enemy on the Ferry</div>':'';
-  document.getElementById('enemy-hand-info').textContent=G.eHand.length+' cards in hand';
+  const ehi=document.getElementById('enemy-hand-info');
+  if(ehi)ehi.textContent=G.eHand.length+' cards in hand';
 }
 function hp(who,e){
   const sp=Math.max(0,(e.shipHp/e.maxShipHp)*100);
@@ -746,6 +963,8 @@ function renderHand(){
   const c=document.getElementById('player-hand');c.innerHTML='';
   G.pHand.forEach((card,i)=>{
     const el=makeCardEl(card,i,true);
+    el.classList.add('card-drawing');
+    el.style.animationDelay=(i*0.05)+'s';
     c.appendChild(el);
   });
   document.getElementById('hand-count').textContent=G.pHand.length+' cards';
@@ -808,25 +1027,72 @@ function renderStatuses(){renderSt('player',G.P);renderSt('enemy',G.E);}
 function renderSt(who,e){
   const el=document.getElementById(who+'-status');
   let h='';const s=e.st;
-  if(s.burning)h+=pill('s-burning','🔥 Burn '+s.burning);
-  if(s.scatter)h+=pill('s-scatter','💥 Scatter '+s.scatter);
-  if(s.drunk)h+=pill('s-drunk','🍺 Drunk');
-  if(e.chained)h+=pill('s-chain','⛓ Chained');
-  if(e.tucked)h+=pill('s-tuck','👁 Tucked');
-  if(e.petMonkey)h+=pill('s-tuck','🐒 Dodge');
-  if(s.cookedfood)h+=pill('s-green','🍖 Healing');
-  if(e.eyeReady)h+=pill('s-purple','🎯 Negated');
-  if(e.puked)h+=pill('s-drunk','🤢 Splashed');
-  if(e.blunderbussReady)h+=pill('s-chain','🔫 Blunderbuss');
-  if(e.redseaTurns>0)h+=pill('s-red','🌊 Red Tide');
-  if(e.pirateDotStacks>0)h+=pill('s-red','⚰ Crew −'+e.pirateDotStacks+'/turn');
+  if(s.burning)h+=pill('s-burning','🔥 Burn '+s.burning,'Ship takes '+( s.burnDmg||1)+' damage per turn for '+s.burning+' more turns.');
+  if(s.scatter)h+=pill('s-scatter','💥 Scatter '+s.scatter,'Ship takes 2 damage per turn for '+s.scatter+' more turns.');
+  if(s.drunk)h+=pill('s-drunk','🍺 Drunk','Attack cards have 50% chance to miss next turn.');
+  if(s.raiseanchor)h+=pill('s-green','⚓ Shield −2','Next incoming ship damage is reduced by 2.');
+  if(e.chained)h+=pill('s-chain','⛓ Chained','Can only play 1 card next turn.');
+  if(e.tucked)h+=pill('s-tuck','👁 Tucked','Pirate cannot be targeted by attack cards this turn.');
+  if(e.petMonkey)h+=pill('s-tuck','🐒 Dodge','Next pirate damage card played against you is dodged.');
+  if(s.cookedfood)h+=pill('s-green','🍖 Healing','Pirate will heal 2 HP at the start of next turn.');
+  if(e.eyeReady)h+=pill('s-purple','🎯 Negated','Next heal or repair card played is negated.');
+  if(e.puked)h+=pill('s-drunk','🤢 Splashed','Opponent attacks deal 1 less damage next turn.');
+  if(e.blunderbussReady)h+=pill('s-chain','🔫 Blunderbuss','Next pirate damage card played against you is negated.');
+  if(e.redseaTurns>0)h+=pill('s-red','🌊 Red Tide','Ship takes 1 damage per turn from Red Sea drift.');
+  if(e.pirateDotStacks>0)h+=pill('s-red','⚰ Crew −'+e.pirateDotStacks+'/turn','Ship takes '+e.pirateDotStacks+' damage at start of each turn (crew shortage from pirate deaths).');
   el.innerHTML=h;
 }
-function pill(cls,txt){return`<span class="status-pill ${cls}">${txt}</span>`;}
+function pill(cls,txt,tooltip=''){
+  const tip=tooltip?`<span class="tooltip-box">${tooltip}</span>`:'';
+  const wrap=tooltip?'has-tooltip':'';
+  return`<span class="status-pill ${cls} ${wrap}">${txt}${tip}</span>`;
+}
+
+function getPileThin(n){if(n===0)return'0';if(n<=5)return'1';if(n<=15)return'2';return'3';}
 
 function updateCounts(){
-  document.getElementById('deck-count').textContent=G.pDeck.length+' in deck';
-  document.getElementById('discard-count').textContent=G.pDiscard.length+' discarded';
+  // Player piles
+  const pd=document.getElementById('player-deck-num');
+  const pdd=document.getElementById('player-discard-num');
+  const deckPile=document.getElementById('player-deck-pile');
+  const discPile=document.getElementById('player-discard-pile');
+  if(pd)pd.textContent=G.pDeck.length;
+  if(pdd)pdd.textContent=G.pDiscard.length;
+  if(deckPile){
+    deckPile.dataset.count=G.pDeck.length;
+    deckPile.dataset.thin=getPileThin(G.pDeck.length);
+  }
+  if(discPile){
+    if(G.pDiscard.length===0){
+      discPile.className='pile discard-pile empty';
+      discPile.innerHTML='';
+    } else {
+      const top=G.pDiscard[G.pDiscard.length-1];
+      discPile.className='pile discard-pile';
+      discPile.innerHTML=`<img src="cards/${top.id}.png" alt="${top.name}" onerror="this.style.display='none'">`;
+    }
+  }
+  // Enemy piles
+  const ed=document.getElementById('enemy-deck-num');
+  const edd=document.getElementById('enemy-discard-num');
+  const edeckPile=document.getElementById('enemy-deck-pile');
+  const ediscPile=document.getElementById('enemy-discard-pile');
+  if(ed)ed.textContent=G.eDeck.length;
+  if(edd)edd.textContent=G.eDiscard.length;
+  if(edeckPile){
+    edeckPile.dataset.count=G.eDeck.length;
+    edeckPile.dataset.thin=getPileThin(G.eDeck.length);
+  }
+  if(ediscPile){
+    if(G.eDiscard.length===0){
+      ediscPile.className='pile discard-pile empty';
+      ediscPile.innerHTML='';
+    } else {
+      const top=G.eDiscard[G.eDiscard.length-1];
+      ediscPile.className='pile discard-pile';
+      ediscPile.innerHTML=`<img src="cards/${top.id}.png" alt="${top.name}" onerror="this.style.display='none'">`;
+    }
+  }
 }
 function updateStreak(){
   const el=document.getElementById('streak-display');el.innerHTML='';
@@ -836,7 +1102,8 @@ function updateStreak(){
     if(i===10)c+=' boss';
     if(i<=G.streak)c+=' done';
     else if(i===G.battle+1)c+=' current';
-    p.className=c;p.textContent=i===10?'X':R[i];
+    p.className=c;
+    p.innerHTML=`<span>${i}</span>`;
     el.appendChild(p);
   }
 }
@@ -845,13 +1112,15 @@ function log(type,msg){
   const el=document.getElementById('log-entries');
   const e=document.createElement('div');
   e.className='log-entry '+type;e.textContent=msg;
-  el.insertBefore(e,el.firstChild);
-  if(el.children.length>80)el.removeChild(el.lastChild);
+  el.appendChild(e); // append at bottom — chronological order
+  el.scrollTop=el.scrollHeight; // auto-scroll to latest
+  if(el.children.length>80)el.removeChild(el.firstChild);
 }
 
 // ===================== SPOTLIGHT =====================
 function spotlight(card,who,cb){
   if(who==='e')cardSound(card);
+  playSFX('swish'); // swish when card arrives on screen
   const s=document.getElementById('card-spotlight');
   const c=document.getElementById('spotlight-card');
   const w=document.getElementById('spotlight-who');
@@ -876,7 +1145,7 @@ function spotlight(card,who,cb){
   `;
   w.textContent=who==='p'?'⚓ You played:':'⚔ Enemy played:';
   s.classList.add('visible');
-  setTimeout(()=>{s.classList.remove('visible');if(cb)setTimeout(cb,150);},1000);
+  setTimeout(()=>{s.classList.remove('visible');if(cb)setTimeout(cb,150);},1500);
 }
 
 // ===================== FLOATERS =====================
@@ -932,6 +1201,8 @@ function dmgPirate(who,amt){
   const e=who==='p'?G.P:G.E;
   const opp=who==='p'?G.E:G.P;
   const oppWho=who==='p'?'e':'p';
+  // Can't damage a dead pirate
+  if(e.dead){log('event',(who==='p'?'Your':'Enemy')+' pirate is on the Ferry — no damage.');return;}
   if(e.tucked){e.tucked=false;log('event',who+' pirate tucked — ignored!');return;}
   if(e.petMonkey){e.petMonkey=false;log('event','🐒 Pet monkey dodge!');return;}
   if(e.blunderbussReady){e.blunderbussReady=false;log('event','🔫 Blunderbuss negated attack!');return;}
@@ -990,14 +1261,18 @@ function fx(card,who){
     case 'cookedfood':healPirate(who,2);e.st.cookedfood=1;log('heal','🍖 +2 HP next turn too.');break;
     case 'grogball':opp.st.drunk=1;log('event','🍺 Drunk! 50% miss next turn.');break;
     case 'grogdrink':G.mana=Math.min(G.mana+2,G.maxMana+2);dmgPirate(who,1);log('event','🍺 +2 mana, -1 HP.');break;
-    case 'pirateshanty':opp.shantied=true;e.shantied=true;log('event','🎵 Shanty! No attacks next turn.');break;
+    case 'pirateshanty':opp.shantied=true;log('event','🎵 Shanty! Neither player can attack next turn.');break;
     case 'anchorball':opp.anchorballed=true;log('event','⚓ Anchorball! They skip next turn.');break;
-    case 'bonecaller':e.st.bonecaller=true;log('event','💀 BoneCaller! Ship−1, pirate+2 this turn.');break;
+    case 'bonecaller':{
+      if(opp.dead){dmgShip(ow,3+sdm);log('damage','💀 BoneCaller! Enemy pirate is dead — 3 ship damage!');}
+      else{dmgPirate(ow,3+pdm);log('damage','💀 BoneCaller! 3 pirate damage.');}
+      break;
+    }
     case 'draw':draw(who,card.val);log('event','Drew '+card.val+' cards.');break;
-    case 'raiseanchor':e.st.raiseanchor=2;log('event','⚓ Raise Anchor! Next ship dmg −2.');break;
+    case 'raiseanchor':e.st.raiseanchor=2;log('event','⚓ Raise Anchor! Next incoming ship damage −2.');break;
     case 'shipwrecksalvage':healShip(who,2);draw(who,1);log('heal','🚢 +2 ship HP, drew 1.');break;
     case 'tuck':e.tucked=true;log('event','👁 Tucked!');break;
-    case 'whiteflag':opp.shantied=true;e.shantied=true;healShip(who,1);healShip(ow,1);log('event','🏳 White Flag! Both +1 ship HP.');break;
+    case 'whiteflag':opp.shantied=true;e.shantied=true;healShip(who,1);healShip(ow,1);log('event','🏳 White Flag! No attacks next turn. Both +1 ship HP.');break;
     case 'petmonkey':e.petMonkey=true;log('event','🐒 Pet Monkey dodge ready!');break;
     case 'banjoshanty':healPirate(who,2);healPirate(ow,2);log('heal','🎵 Both pirates +2 HP.');break;
     case 'smugglersdeal':e.nextFree=true;log('event','🤝 Next card free!');break;
@@ -1007,7 +1282,7 @@ function fx(card,who){
     case 'felloverboard':dmgPirate(ow,3+pdm);dmgPirate(who,1);log('damage','🌊 Fell Overboard! 3 to them, 1 to you.');break;
     case 'allianceflag':e.allianceActive=true;log('event','🤝 Alliance! −1 mana all cards this turn.');break;
     case 'sharkbait':dmgPirate(ow,4+pdm);dmgPirate(who,2);log('damage','🦈 Shark Bait! 4 them, 2 you.');break;
-    case 'swordlord':{G.swordlord[who]=(G.swordlord[who]||0)+1;const d=G.swordlord[who]>=3?4:2;dmgPirate(ow,d+pdm);log('damage','⚔ Sword Lord! '+d+' dmg (streak: '+G.swordlord[who]+')');break;}
+    case 'swordlord':{G.swordlord[who]=(G.swordlord[who]||0)+1;const d=G.swordlord[who]>=2?4:2;dmgPirate(ow,d+pdm);log('damage','⚔ Sword Lord! '+d+' dmg (streak: '+G.swordlord[who]+')');break;}
     case 'sirensongskull':{const od=isP?G.eDiscard:G.pDiscard;if(od.length){const s=od.pop();if(isP)G.pHand.push(s);else G.eHand.push(s);log('event','🎵 Stole '+s.name+' from discard.');}else{log('event','Siren Skull: nothing to steal.');}break;}
     case 'volcanicrock':if(Math.random()<0.3){dmgShip(who,5);log('damage','🌋 Volcanic Rock backfired!');}else{dmgShip(ow,5+sdm);log('damage','🌋 Volcanic Rock! 5 dmg.');}break;
     case 'fortofthedamned':{const d=e.dead?7:4;dmgShip(ow,d+sdm);log('damage','🏰 Fort of the Damned! '+d+' dmg.');break;}
@@ -1095,9 +1370,15 @@ function playCard(idx){
   const cost=cardCost(card,'p');
   if(cost>G.mana)return;
   if(shantiedBlock(card)){log('event','Shanty! No attacks.');return;}
+  // Brief play animation
+  const cardEls=document.getElementById('player-hand').children;
+  if(cardEls[idx])cardEls[idx].style.transform='scale(0.8) translateY(-20px)';
+  cardSound(card);
   G.mana-=cost;
   G.pHand.splice(idx,1);
   if(!card.consumed)G.pDiscard.push(card);
+  // Update discard pile immediately so you see card go there
+  updateCounts();
   spotlight(card,'p',()=>{
     fx(card,'p');
     log('player','▶ You played '+card.name+'.');
@@ -1140,8 +1421,11 @@ function modEvents(){
     if(G.modTurn%3===0){
       G.zoneStage++;
       const zd=G.zoneStage*2;
-      dmgShip('p',zd);dmgShip('e',zd);
-      log('event','🌊 RED SEA CLOSES! Both ships −'+zd+'!');
+      log('event','🌊 RED SEA CLOSES! Zone stage '+G.zoneStage+' — both ships take '+zd+' damage!');
+      dmgShip('p',zd);
+      log('damage','🌊 Your ship: −'+zd+' HP from the Red Sea.');
+      dmgShip('e',zd);
+      log('damage','🌊 Enemy ship: −'+zd+' HP from the Red Sea.');
       const zt=document.getElementById('zone-timer');
       zt.style.display='block';zt.textContent='🌊 Zone stage '+G.zoneStage+' — next in 3 turns';
       if(G.zoneStage>=4){const w=G.P.shipHp>=G.E.shipHp?'e':'p';if(w==='e')G.E.shipHp=0;else G.P.shipHp=0;log('event','🌊 The Red Sea claims a ship!');}
@@ -1204,16 +1488,29 @@ function runEnemy(){
     played++;
     delays.push(card);
   }
+  // Play cards sequentially — each waits for previous spotlight to finish
+  const SPOTLIGHT_DURATION=1500+200;
+  const playedNames=[];
   delays.forEach((card,i)=>{
+    playedNames.push(card.name);
     setTimeout(()=>{
       spotlight(card,'e',()=>{
         fx(card,'e');
         log('ai','◀ Enemy played '+card.name+'.');
+        updateCounts();
         checkEnd();renderAll();
       });
-    },(i+1)*500);
+    },i*SPOTLIGHT_DURATION+300);
   });
-  setTimeout(endEnemy,(delays.length+1)*550+400);
+  setTimeout(()=>{
+    // Show enemy last turn summary
+    const elt=document.getElementById('enemy-last-turn');
+    if(elt&&playedNames.length>0){
+      elt.style.display='block';
+      elt.textContent='Enemy played: '+playedNames.join(', ');
+    }
+    endEnemy();
+  },delays.length*SPOTLIGHT_DURATION+600);
 }
 
 function aiSort(hand,diff){
@@ -1287,6 +1584,9 @@ function endEnemy(){
       G.pAttackedLast=false;
       G.mana=G.maxMana;
       draw('p',handSize());
+      // Clear enemy last turn summary
+      const elt=document.getElementById('enemy-last-turn');
+      if(elt)elt.style.display='none';
       setMsg('Your turn — play your cards!');
       document.getElementById('end-turn-btn').disabled=false;
       checkEnd();renderAll();
@@ -1320,8 +1620,10 @@ function checkEnd(){
   if(G.P.shipHp<=0){
     G.phase='done';
     setTimeout(()=>{
+      stopTimer();
+      const t=getTimerStr();
       log('damage','☠ Your ship sank.');
-      document.getElementById('gameover-msg').textContent='Streak '+G.streak+'/10. The sea claims everything.';
+      document.getElementById('gameover-msg').textContent='Streak '+G.streak+'/10 — Run time: '+t+'. The sea claims everything.';
       show('gameover');
     },700);
     return;
@@ -1331,7 +1633,12 @@ function checkEnd(){
     setTimeout(()=>{
       log('event','⚓ Enemy sunk! Victory!');
       G.streak++;
-      if(G.streak>=10)show('victory');
+      if(G.streak>=10){
+        stopTimer();
+        const t=getTimerStr();
+        document.querySelector('#screen-victory .gameover-sub').textContent='Streak 10 complete in '+t+'. You are a Pirate Legend.';
+        show('victory');
+      }
       else showReward();
     },700);
   }
@@ -1366,12 +1673,20 @@ function showReward(){
   picks.forEach(card=>{
     const wrap=document.createElement('div');wrap.className='reward-wrap';
     const el=makeCardEl(card,0,false);
-    el.style.width='130px';el.style.minHeight='170px';el.style.fontSize='12px';el.style.cursor='pointer';
+    el.style.width='170px';el.style.minHeight='225px';el.style.fontSize='13px';el.style.cursor='pointer';
     wrap.appendChild(el);
     const lbl=document.createElement('div');lbl.className='reward-wrap-label';
     lbl.textContent=card.runBonus?'RUN BONUS':'ADD TO DECK';
     wrap.appendChild(lbl);
     wrap.onclick=()=>pickReward(card);
+    // Add tooltip for upgrade cards
+    if(card.fn&&card.fn.startsWith('rb_upg')){
+      wrap.classList.add('has-tooltip');
+      const tip=document.createElement('div');
+      tip.className='tooltip-box';
+      tip.textContent=card.effect;
+      wrap.appendChild(tip);
+    }
     cont.appendChild(wrap);
   });
   show('reward');
@@ -1401,7 +1716,7 @@ function skipReward(){
 function aiPickReward(){
   // AI picks 1 card from a pool of 3 — prioritises naval damage and pirate damage
   const bn=G.battle;
-  let pool=[...REWARD_CARDS].filter(c=>!c.runBonus); // AI only gets playable cards
+  let pool=[...REWARD_CARDS].filter(c=>!c.runBonus);
   if(bn<3)pool=pool.filter(c=>c.tier==='common');
   else if(bn<6)pool=pool.filter(c=>c.tier==='common'||c.tier==='rare');
   if(pool.length===0)return;
@@ -1434,6 +1749,51 @@ function aiRewardScore(card){
   return s+Math.random()*3; // small random factor
 }
 
+// ===================== RUN TIMER =====================
+let timerInterval=null;
+let timerStart=null;
+let timerEl=null;
+
+function timerTick(){
+  if(!timerStart)return;
+  const elapsed=Math.floor((Date.now()-timerStart)/1000);
+  const m=Math.floor(elapsed/60).toString().padStart(2,'0');
+  const s=(elapsed%60).toString().padStart(2,'0');
+  if(timerEl)timerEl.textContent='⏱ '+m+':'+s;
+}
+
+function startTimer(){
+  timerEl=document.getElementById('run-timer');
+  timerStart=Date.now();
+  timerEl.style.display='block';
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=setInterval(timerTick,1000);
+}
+
+function stopTimer(){
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=null;
+}
+
+function getTimerStr(){
+  if(!timerStart)return '00:00';
+  const elapsed=Math.floor((Date.now()-timerStart)/1000);
+  const m=Math.floor(elapsed/60).toString().padStart(2,'0');
+  const s=(elapsed%60).toString().padStart(2,'0');
+  return m+':'+s;
+}
+
+function setMusicVolumeAll(val){
+  setMusicVolume(val);
+  ['music-vol','music-vol-intro'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=val;});
+  ['music-btn','music-btn-intro'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=musicMuted?'🔇':'🔊';});
+}
+function setSFXVolumeAll(val){
+  setSFXVolume(val);
+  ['sfx-vol','sfx-vol-intro'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=val;});
+  ['sfx-btn','sfx-btn-intro'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=sfxMuted?'🔕':'🔔';});
+}
+
 // ===================== RULES MODAL =====================
 function openRules(){document.getElementById('rules-modal').classList.add('open');}
 function closeRules(){document.getElementById('rules-modal').classList.remove('open');}
@@ -1453,71 +1813,164 @@ function cardImgHTML(card){
 
 // ===================== SOUND ENGINE =====================
 const SOUNDS={};
-const SOUND_FILES={
-  cannon:'sounds/cannon.mp3',
-  sword:'sounds/sword.mp3',
-  repair:'sounds/repair.mp3',
-  eat:'sounds/eat.mp3',
-  chaos:'sounds/chaos.mp3',
-  consumed:'sounds/consumed.mp3',
-  splash:'sounds/splash.mp3',
-  victory:'sounds/victory.mp3',
-  defeat:'sounds/defeat.mp3',
+let sfxVolume=0.85;
+let musicVolume=0.08;
+let sfxMuted=false;
+
+// Card sound map — per card ID with fallbacks
+const CARD_SOUNDS={
+  cannonball:'cardsounds/cannonball.mp3',
+  ballastball:'cardsounds/cannonball.mp3',  // same as cannonball
+  blunderbomb:'cardsounds/blunderbomb.mp3',
+  firebomb:'cardsounds/firebomb.mp3',
+  scattershot:'cardsounds/scattershot.mp3',
+  chainshot:'cardsounds/chainshot.mp3',
+  ballastball:'cardsounds/ballastball.mp3',
+  pistolshot:'cardsounds/pistolshot.mp3',
+  sworddash:'cardsounds/sworddash.mp3',
+  doubletap:'cardsounds/doubletap.mp3',
+  boarding:'cardsounds/boarding.mp3',
+  blunderbuss:'cardsounds/blunderbuss.mp3',
+  deckshot:'cardsounds/deckshot.mp3',
+  eyeofreach:'cardsounds/eyeofreach.mp3',
+  plank:'cardsounds/plank.mp3',
+  bailwater:'cardsounds/bailwater.mp3',
+  bilgerat:'cardsounds/plank.mp3',           // fallback
+  raiseanchor:'cardsounds/raiseanchor.mp3',
+  emergencyrepairs:'cardsounds/plank.mp3',   // fallback
+  banana:'cardsounds/banana.mp3',
+  pineapple:'cardsounds/banana.mp3',         // fallback
+  cookedfood:'cardsounds/cookedfood.mp3',
+  grogball:'cardsounds/grogball.mp3',
+  grogdrink:'cardsounds/grogdrink.mp3',
+  pirateshanty:'cardsounds/pirateshanty.mp3',
+  anchorball:'cardsounds/anchorball.mp3',
+  bonecaller:'cardsounds/bonecaller.mp3',
+  raisesails:'cardsounds/raisesails.mp3',
+  crowsnest:'cardsounds/crowsnest.mp3',
 };
-function playSound(name){
-  const src=SOUND_FILES[name];if(!src)return;
+
+// Generic SFX
+const SFX_FILES={
+  end_turn:'cardsounds/end_turn.mp3',
+  victory:'cardsounds/victory.mp3',
+  defeat:'cardsounds/defeat.mp3',
+  reward_screen:'cardsounds/reward.mp3',
+  modifier:'cardsounds/modifier.mp3',
+  splash:'cardsounds/splash.mp3',
+  reshuffle:'cardsounds/reshuffle.mp3',
+  card_tick:'cardsounds/card_tick.mp3',
+  reward_card:'cardsounds/reward.mp3',
+  swish:'cardsounds/swish.mp3',
+};
+
+function playSound(src){
+  if(sfxMuted)return;
   try{
-    if(!SOUNDS[name])SOUNDS[name]=new Audio(src);
-    const s=SOUNDS[name].cloneNode();
-    s.volume=0.5;
+    if(!SOUNDS[src])SOUNDS[src]=new Audio(src);
+    const s=SOUNDS[src].cloneNode();
+    s.volume=sfxVolume;
     s.play().catch(()=>{});
   }catch(e){}
 }
+
+function playSFX(name){
+  const src=SFX_FILES[name];
+  if(src)playSound(src);
+}
+
 function cardSound(card){
-  if(card.consumed)return playSound('consumed');
-  if(card.type==='naval')return playSound('cannon');
-  if(card.type==='pirate')return playSound('sword');
-  if(card.type==='repair')return playSound('repair');
-  if(card.type==='heal')return playSound('eat');
-  playSound('chaos');
+  // Reward cards all use reward_card sound
+  if(card.reward){playSound(SFX_FILES.reward_card);return;}
+  // Per-card sound with fallback
+  const src=CARD_SOUNDS[card.id];
+  if(src){playSound(src);return;}
+  // Generic fallback by type
+  if(card.type==='naval')playSound(CARD_SOUNDS.cannonball);
+  else if(card.type==='pirate')playSound(CARD_SOUNDS.pistolshot);
+  else if(card.type==='repair')playSound(CARD_SOUNDS.plank);
+  else if(card.type==='heal')playSound(CARD_SOUNDS.banana);
+  else playSound(CARD_SOUNDS.grogball);
+}
+
+// Card hover tick
+function initCardTick(){
+  document.getElementById('player-hand').addEventListener('mouseover',e=>{
+    const card=e.target.closest('.card');
+    if(card&&card.classList.contains('playable'))playSFX('card_tick');
+  });
 }
 
 // ===================== MUSIC =====================
+let lobbyMusic=null;
 let bgMusic=null;
 let musicMuted=false;
 
-function initMusic(){
-  bgMusic=new Audio('sounds/music.mp3');
-  bgMusic.loop=true;
-  bgMusic.volume=0.30;
-  bgMusic.play().catch(()=>{
-    // Autoplay blocked — will start on first interaction
-    document.addEventListener('click',function startOnClick(){
-      bgMusic.play().catch(()=>{});
-      document.removeEventListener('click',startOnClick);
+function initLobbyMusic(){
+  lobbyMusic=new Audio('lobby.mp3');
+  lobbyMusic.loop=true;
+  lobbyMusic.volume=0.35;
+  lobbyMusic.play().catch(()=>{
+    const startLobby=()=>{lobbyMusic.play().catch(()=>{});};document.addEventListener('mousemove',startLobby,{once:true});document.addEventListener('click',function startLobbyClick(){
+      lobbyMusic.play().catch(()=>{});
+      document.removeEventListener('click',startLobby);
     },{once:true});
   });
-  document.getElementById('music-vol').value=30;
+}
+
+function switchToGameMusic(){
+  // Fade out lobby, fade in game music
+  if(lobbyMusic){
+    const fadeOut=setInterval(()=>{
+      if(lobbyMusic.volume>0.05){lobbyMusic.volume=Math.max(0,lobbyMusic.volume-0.05);}
+      else{lobbyMusic.pause();lobbyMusic.currentTime=0;clearInterval(fadeOut);}
+    },80);
+  }
+  bgMusic=new Audio('sounds/music.mp3');
+  bgMusic.loop=true;
+  bgMusic.volume=0;
+  bgMusic.play().catch(()=>{});
+  const fadeIn=setInterval(()=>{
+    if(bgMusic.volume<musicVolume-0.05){bgMusic.volume=Math.min(musicVolume,bgMusic.volume+0.05);}
+    else{bgMusic.volume=musicVolume;clearInterval(fadeIn);}
+  },80);
+  document.getElementById('music-vol').value=musicVolume*100;
 }
 
 function toggleMusic(){
-  if(!bgMusic)return;
   musicMuted=!musicMuted;
-  bgMusic.muted=musicMuted;
+  if(bgMusic)bgMusic.muted=musicMuted;
+  if(lobbyMusic)lobbyMusic.muted=musicMuted;
   document.getElementById('music-btn').textContent=musicMuted?'🔇':'🔊';
 }
 
-function setVolume(val){
-  if(!bgMusic)return;
-  bgMusic.volume=val/100;
-  if(val==0){bgMusic.muted=true;musicMuted=true;document.getElementById('music-btn').textContent='🔇';}
-  else{bgMusic.muted=false;musicMuted=false;document.getElementById('music-btn').textContent='🔊';}
+function setMusicVolume(val){
+  musicVolume=val/100;
+  if(bgMusic){bgMusic.volume=musicVolume;if(musicVolume===0){bgMusic.muted=true;musicMuted=true;document.getElementById('music-btn').textContent='🔇';}else{bgMusic.muted=false;musicMuted=false;document.getElementById('music-btn').textContent='🔊';}}
+  if(lobbyMusic)lobbyMusic.volume=musicVolume;
 }
 
-// Patch startGame to init music on first user interaction
+function setSFXVolume(val){
+  sfxVolume=val/100;
+  if(sfxVolume===0)sfxMuted=true;
+  else sfxMuted=false;
+  document.getElementById('sfx-btn').textContent=sfxMuted?'🔕':'🔔';
+}
+
+function toggleSFX(){
+  sfxMuted=!sfxMuted;
+  document.getElementById('sfx-btn').textContent=sfxMuted?'🔕':'🔔';
+}
+
+// Start lobby music on page load
+window.addEventListener('load',()=>{initLobbyMusic();});
+
+// Patch startGame to switch to game music
 const _origStartGame=startGame;
 window.startGame=function(){
-  initMusic();
+  switchToGameMusic();
+  setTimeout(initCardTick,1000);
+  document.getElementById('fanproject-badge').style.display='none';
   _origStartGame();
 };
 
@@ -1527,17 +1980,30 @@ window.checkEnd=function(){
   const prevPhase=G.phase;
   _origCheckEnd();
   if(G.phase==='done'&&prevPhase!=='done'){
-    if(G.P&&G.P.shipHp<=0)playSound('defeat');
-    else playSound('victory');
+    if(G.P&&G.P.shipHp<=0)playSFX('defeat');
+    else playSFX('victory');
   }
 };
 
-// Patch playCard to play sound
-const _origPlayCard=playCard;
-window.playCard=function(idx){
-  const card=G.pHand[idx];
-  if(card)cardSound(card);
-  _origPlayCard(idx);
+// Patch modifier screen to play modifier sound
+const _origShowModifier=showModifier;
+window.showModifier=function(idx){
+  playSFX('modifier');
+  _origShowModifier(idx);
+};
+
+// Patch reward screen to play reward sound
+const _origShowReward=showReward;
+window.showReward=function(){
+  playSFX('reward_screen');
+  _origShowReward();
+};
+
+// Patch endPlayerTurn to play end_turn sound
+const _origEndTurn=endPlayerTurn;
+window.endPlayerTurn=function(){
+  playSFX('end_turn');
+  _origEndTurn();
 };
 
 // Patch modifier events to play splash sound
@@ -1545,18 +2011,30 @@ const _origModEvents=modEvents;
 window.modEvents=function(){
   const before={ps:G.P.shipHp,es:G.E.shipHp};
   _origModEvents();
-  if(G.P.shipHp<before.ps||G.E.shipHp<before.es)playSound('splash');
+  if(G.P.shipHp<before.ps||G.E.shipHp<before.es)playSFX('splash');
 };
 
+// Patch draw to play reshuffle sound
+const _origDraw=draw;
+window.draw=function(who,n){
+  const isP=who==='p';
+  const deckBefore=(isP?G.pDeck:G.eDeck).length;
+  const discBefore=(isP?G.pDiscard:G.eDiscard).length;
+  _origDraw(who,n);
+  const deckAfter=(isP?G.pDeck:G.eDeck).length;
+  // If deck grew (reshuffle happened)
+  if(deckAfter>deckBefore&&discBefore>0)playSFX('reshuffle');
+};
 // Init
 G=newG();
 </script>
 
-<!-- MUSIC CONTROL -->
-<div id="music-ctrl">
-  <button id="music-btn" onclick="toggleMusic()" title="Mute/Unmute">🔊</button>
-  <input id="music-vol" type="range" min="0" max="100" value="30" oninput="setVolume(this.value)" title="Volume">
+<!-- FAN PROJECT BADGE — intro only -->
+<div id="fanproject-badge" style="position:fixed;bottom:16px;left:16px;z-index:100;opacity:0.7;transition:opacity 0.2s;">
+  <img src="fanproject.png" alt="Fan Project" style="height:48px;width:auto;display:block;" onerror="this.parentNode.style.display='none'">
 </div>
+
+<!-- RUN TIMER element kept for JS reference but hidden inline -->
 
 </body>
 </html>
